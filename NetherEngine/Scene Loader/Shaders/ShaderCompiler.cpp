@@ -5,16 +5,12 @@ DEFINE_THIS_FILE;  // used by NEAssert.h to handle errors
 
   NE::ShaderCompiler::ShaderCompiler(const std::string& shaderCode, GLenum shaderType) :  _object(0), _refCount(NULL)
   {
-    std::cout << "Pre-glCreateShader() errors:" << glGetError() << std::endl;
-    
     //create the shader object
     _object = glCreateShader(shaderType);   // Returns a non-zero reference id for the shader object. (glGetShader(GLInt id))"
     
-    std::cout << "After creating the shader, glGetError() yielded " << glGetError() << " when given the shaderType enum number " << shaderType << std::endl;
-    
-    
 
-    ASSERT(_object == 0 && "glCreateShader failed");
+
+    //ASSERT(_object == 0 && "glCreateShader failed");
 
     //set the source code
     const char* code = shaderCode.c_str();
@@ -26,6 +22,7 @@ DEFINE_THIS_FILE;  // used by NEAssert.h to handle errors
     //throw exception if compile error occurred
     GLint status;
     glGetShaderiv(_object, GL_COMPILE_STATUS, &status);
+    
     if (status == GL_FALSE) {
         std::string msg("Compile failure in shader:\n");
         

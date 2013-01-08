@@ -96,54 +96,66 @@ static void Render();
 
 // === Main ===
 int main(int argc, char *argv[]) {
-    
-    // --- Initialise GLFW
-    if(!glfwInit())     // Equivalent to returning GL_FALSE for failed initialization
-        throw std::runtime_error("glfwInit failed");
-    
-    
-    // --- Open a window with GLFW
-    glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 3);
-    glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 2);       // Unfortunately, GLFW only supports 3.2 on Mac
-    glfwOpenWindowHint(GLFW_WINDOW_NO_RESIZE, GL_TRUE);
-    
-    //Initialize window. Sets window width, height, red, blue, green, and alpha bit depth, depth ('z') buffer bit depth, stencil bit depth, and wheter to use windowed or fullscreen mode
-    if(!glfwOpenWindow(SCREEN_SIZE.x, SCREEN_SIZE.y, 8, 8, 8, 8, 0, 0, GLFW_WINDOW))
-        throw std::runtime_error("glfwOpenWindow failed. Can your hardware handle OpenGL 3.2?");
-    
-    
-    // -- Initialise GLEW
-    glewExperimental = GL_TRUE; //stops glew crashing on OSX :-/
-    if(glewInit() != GLEW_OK)
-        throw std::runtime_error("glewInit failed for an unknown reason.");
-    
-    
-    // print out some info about the graphics drivers
-    std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
-    std::cout << "GLSL version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
-    std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
-    std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
-    
-    // load vertex and fragment shaders into opengl
-    LoadShaders();
-    
-    // create buffer and fill it with the points of the triangle
-    LoadTriangles();
-    
-    // run while the window is open
-    while(glfwGetWindowParam(GLFW_OPENED)){
-        // draw one frame
-        Render();
-    }
-    
-    // clean up and exit
-    glfwTerminate();        // All resources are freed. After this is called, glwfInit() must be executed before the library can be used again.0
+
+  //DEFINE_THIS_FILE;   // Required to use ASSERTions
   
-    // Clean up any object left in our managed memory.
-    ManagedMemObj::CollectRemainingObjects( true );
   
-    return EXIT_SUCCESS;
+  // --- Initialise GLFW
+  if(!glfwInit())     // Equivalent to returning GL_FALSE for failed initialization
+      throw std::runtime_error("glfwInit failed");
+
+
+  // --- Open a window with GLFW
+  glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 3);
+  glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 2);       // Unfortunately, GLFW only supports 3.2 on Mac
+  glfwOpenWindowHint(GLFW_WINDOW_NO_RESIZE, GL_TRUE);
+
+  //Initialize window. Sets window width, height, red, blue, green, and alpha bit depth, depth ('z') buffer bit depth, stencil bit depth, and wheter to use windowed or fullscreen mode
+  if(!glfwOpenWindow(SCREEN_SIZE.x, SCREEN_SIZE.y, 8, 8, 8, 8, 0, 0, GLFW_WINDOW))
+      throw std::runtime_error("glfwOpenWindow failed. Can your hardware handle OpenGL 3.2?");
+
+
+  // -- Initialise GLEW
+  glewExperimental = GL_TRUE; //stops glew crashing on OSX :-/
+  if(glewInit() != GLEW_OK)
+      throw std::runtime_error("glewInit failed for an unknown reason.");
+
+  // Clears OpenGL errors
+  glGetError();
+
+  // print out some info about the graphics drivers
+  std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
+  std::cout << "GLSL version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
+  std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
+  std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
+  
+  
+  // load vertex and fragment shaders into opengl
+  LoadShaders();
+
+  // create buffer and fill it with the points of the triangle
+  LoadTriangles();
+  
+  
+  //ASSERT(glGetError() != 0 && "OpenGL error detected.");
+  // If the code gets past here, then initialization worked.
+  //  If it didn't, then use glGetError and convert the result from hex to decimal. See the OpenGL docs to debug.
+  
+
+  // run while the window is open
+  while(glfwGetWindowParam(GLFW_OPENED)){
+      // draw one frame
+      Render();
+  }
+
+  // clean up and exit
+  glfwTerminate();        // All resources are freed. After this is called, glwfInit() must be executed before the library can be used again.0
+
+  // Clean up any object left in our managed memory.
+  ManagedMemObj::CollectRemainingObjects( true );
+
+  return EXIT_SUCCESS;
 }
 
 
