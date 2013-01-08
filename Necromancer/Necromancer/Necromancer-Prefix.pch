@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'Necromancer' target in the 'Necromancer' project
+//
+
+#ifdef __OBJC__
+    #import <Cocoa/Cocoa.h>
+#endif

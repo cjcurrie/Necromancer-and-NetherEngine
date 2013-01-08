@@ -1,0 +1,91 @@
+// !$*UTF8*$!
+{
+	301FB1F7168149AC00792EE9 /* Project object */ = {
+		activeBuildConfigurationName = Debug;
+		activeExecutable = 30B2F27F1688D724005D90E3 /* Necromancer */;
+		activeTarget = 301FB1FF168149AC00792EE9 /* Necromancer */;
+		codeSenseManager = 30B2F29F1688D734005D90E3 /* Code sense */;
+		executables = (
+			30B2F27F1688D724005D90E3 /* Necromancer */,
+		);
+		perUserDictionary = {
+			PBXConfiguration.PBXFileTableDataSource3.PBXFileTableDataSource = {
+				PBXFileTableDataSourceColumnSortingDirectionKey = "-1";
+				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
+				PBXFileTableDataSourceColumnWidthsKey = (
+					20,
+					341,
+					20,
+					48.16259765625,
+					43,
+					43,
+					20,
+				);
+				PBXFileTableDataSourceColumnsKey = (
+					PBXFileDataSource_FiletypeID,
+					PBXFileDataSource_Filename_ColumnID,
+					PBXFileDataSource_Built_ColumnID,
+					PBXFileDataSource_ObjectSize_ColumnID,
+					PBXFileDataSource_Errors_ColumnID,
+					PBXFileDataSource_Warnings_ColumnID,
+					PBXFileDataSource_Target_ColumnID,
+				);
+			};
+			PBXPerProjectTemplateStateSaveDate = 378066724;
+			PBXWorkspaceStateSaveDate = 378066724;
+		};
+		sourceControlManager = 30B2F29E1688D734005D90E3 /* Source Control */;
+		userBuildSettings = {
+		};
+	};
+	301FB1FF168149AC00792EE9 /* Necromancer */ = {
+		activeExec = 0;
+		executables = (
+			30B2F27F1688D724005D90E3 /* Necromancer */,
+		);
+	};
+	301FB220168149AD00792EE9 /* NecromancerTests */ = {
+		activeExec = 0;
+	};
+	30B2F27F1688D724005D90E3 /* Necromancer */ = {
+		isa = PBXExecutable;
+		activeArgIndices = (
+		);
+		argumentStrings = (
+		);
+		autoAttachOnCrash = 1;
+		breakpointsEnabled = 0;
+		configStateDict = {
+		};
+		customDataFormattersEnabled = 1;
+		dataTipCustomDataFormattersEnabled = 1;
+		dataTipShowTypeColumn = 1;
+		dataTipSortType = 0;
+		debuggerPlugin = GDBDebugging;
+		disassemblyDisplayState = 0;
+		enableDebugStr = 1;
+		environmentEntries = (
+		);
+		executableSystemSymbolLevel = 0;
+		executableUserSymbolLevel = 0;
+		libgmallocEnabled = 0;
+		name = Necromancer;
+		showTypeColumn = 0;
+		sourceDirectories = (
+		);
+	};
+	30B2F29E1688D734005D90E3 /* Source Control */ = {
+		isa = PBXSourceControlManager;
+		fallbackIsa = XCSourceControlManager;
+		isSCMEnabled = 0;
+		scmConfiguration = {
+			repositoryNamesForRoots = {
+				"" = "";
+			};
+		};
+	};
+	30B2F29F1688D734005D90E3 /* Code sense */ = {
+		isa = PBXCodeSenseManager;
+		indexTemplatePath = "";
+	};
+}
