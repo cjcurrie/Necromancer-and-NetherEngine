@@ -10,6 +10,12 @@
       - Tom Dalling for the Modern OpenGL Guide series
 */
 
+// @Damien: Make sure this main.mm file has an extension your compiler can use. *.mm is for Objective-C (and reg. c++) files on Mac.
+
+
+#define MAC_BUILD
+//#define WIN_BUILD     // @Damien: toggle from mac to win here.
+//#define LIN_BUILD
 
 
 // standard C++ libraries
@@ -56,15 +62,7 @@
     #include "NEAssert.h"       // This works like c assert, but passes on
                                 //  to NEAssert::onAssert__(char const *file, unsigned line) afterward
 
-    
-#include "ManagedMemObj.h"
-#include "StaticBufferWrapper.h"
-#include "DynamicBufferWrapper.h"
-#include "ObjFunctor.h"
-#include "Functor.h"
-#include "ManMemObjFunctor.h"
-#include "Singleton.h"
-#include "RingBuffer.h"
+    #include "ManagedMemObj.h"
 
 
   // ---- Rendering
@@ -82,8 +80,9 @@ const glm::vec2 SCREEN_SIZE(1200, 700);
 
 // globals
 ShaderLoaderProgram* g_ShaderLoaderProgram = NULL;
-GLuint g_VAO = 0;
-GLuint g_VBO = 0;
+GLuint g_VAO = 0;   // Vertex array object
+GLuint g_VBO = 0;   // Vertex buffer object
+
 
 // ============
 //  Since Obj-C headers are hard, here are some forward
@@ -96,8 +95,6 @@ static void Render();
 
 // === Main ===
 int main(int argc, char *argv[]) {
-
-  //DEFINE_THIS_FILE;   // Required to use ASSERTions
   
   
   // --- Initialise GLFW
@@ -117,7 +114,10 @@ int main(int argc, char *argv[]) {
 
 
   // -- Initialise GLEW
-  glewExperimental = GL_TRUE; //stops glew crashing on OSX :-/
+  #ifdef MAC_BUILD
+    glewExperimental = GL_TRUE; //stops glew crashing on OSX :-/
+  #endif
+  
   if(glewInit() != GLEW_OK)
       throw std::runtime_error("glewInit failed for an unknown reason.");
 
@@ -138,11 +138,22 @@ int main(int argc, char *argv[]) {
   LoadTriangles();
   
   
-  //ASSERT(glGetError() != 0 && "OpenGL error detected.");
-  // If the code gets past here, then initialization worked.
-  //  If it didn't, then use glGetError and convert the result from hex to decimal. See the OpenGL docs to debug.
+  
+  // See if the initialization worked
+  // Unfortunately, main.mm is the only place we can't use ASSERT (due to DEFINE_THIS_FILE scope)
+  GLenum currentError = glGetError();
+  if (currentError != 0)
+  {
+    std::string msg = "OpenGL initialization sequence failed with error code ";
+    
+    char errString[21]; // enough to hold all numbers up to 64-bits
+    sprintf(errString, "%d", currentError);
+    
+    throw std::runtime_error(msg + errString);
+  }
   
 
+  
   // run while the window is open
   while(glfwGetWindowParam(GLFW_OPENED)){
       // draw one frame
@@ -159,14 +170,30 @@ int main(int argc, char *argv[]) {
 }
 
 
-// --- FOR MAC ONLY ---
-// returns the full path to the file `fileName` in the resources directory of the app bundle
-static std::string ResourcePath(std::string fileName) {
+// --- Platform-specific filesystem access ---
+#ifdef MAC_BUILD
+  // returns the full path to the file `fileName` in the resources directory of the app bundle
+  static std::string ResourcePath(std::string fileName)
+  {
     NSString* fname = [NSString stringWithCString:fileName.c_str() encoding:NSUTF8StringEncoding];
     NSString* path = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:fname];
     return std::string([path cStringUsingEncoding:NSUTF8StringEncoding]);
-}
-// @TODO: other OS filepaths ResourcePath()
+  }
+
+#elif defined WIN_BUILD  
+// @Damien: You won't be able to load the shaders from the filesystem until this method is completed.
+  static std::string ResourcePath(std::string fileName)
+  {
+    return "failed";
+  }
+
+#elif defined LIN_BUILD
+  static std::string ResourcePath(std::string fileName)
+  {
+    return "failed";
+  }
+#endif
+
 
 
 // Including here, because this include and the shader loading needs to be moved to another class
@@ -196,31 +223,31 @@ static void LoadTriangles   ()
 
 
   /*
-   
-   Hex y-axis
-   
-   
-   Triangle sides and ordering
-   0,1 hex
-   
-   
-   /+y axis
-   /
-    /\-------------\------------1,1 hex
-   /  \          /  \           /  \  par 1   /
-  /    \        /    \         /    \   1    /
-        \      /      \       /      \      /
-         \    /        \     /  par1  \    /
-          \  /          \   /     0    \  /
-           \/            \ /            \/
-            b------------0,0 both-------/\
-          / |\           /|\           /  \
-  \       /  | \         / | \         /    \
-  \     / s2|s3\       /  |  \       /      \
-   \   /    |   \     /   |   \     /        \
-    \ /     | s1 \   /    |    \   /          \
-   -1,-1--------------------------------------1,0 hex
-   side 3
+     
+     Hex y-axis
+     
+     
+     Triangle sides and ordering
+     0,1 hex
+     
+     
+     /+y axis
+     /
+      /\-------------\------------1,1 hex
+     /  \          /  \           /  \  par 1   /
+    /    \        /    \         /    \   1    /
+          \      /      \       /      \      /
+           \    /        \     /  par1  \    /
+            \  /          \   /     0    \  /
+             \/            \ /            \/
+              b------------0,0 both-------/\
+            / |\           /|\           /  \
+   \       /  | \         / | \         /    \
+    \     / s2|s3\       /  |  \       /      \
+     \   /    |   \     /   |   \     /        \
+      \ /     | s1 \   /    |    \   /          \
+     -1,-1--------------------------------------1,0 hex
+     side 3
    
    */
 
@@ -273,11 +300,12 @@ static void LoadTriangles   ()
   //        }
   //    }
 
-  GLfloat vertexData[] = {
-  //  X     Y     Z
-  0.0f, 0.8f, 0.0f,
-  -0.8f,-0.8f, 0.0f,
-  0.8f,-0.8f, 0.0f,
+  GLfloat vertexData[] =
+  {
+    // X    Y       Z
+    0.0f,   0.8f,   0.0f,
+    -0.8f,  -0.8f,  0.0f,
+    0.8f,   -0.8f,  0.0f,
   };
 
   // Put the triangle array into buffer

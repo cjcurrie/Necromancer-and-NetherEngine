@@ -9,8 +9,7 @@ DEFINE_THIS_FILE;  // used by NEAssert.h to handle errors
     _object = glCreateShader(shaderType);   // Returns a non-zero reference id for the shader object. (glGetShader(GLInt id))"
     
 
-
-    //ASSERT(_object == 0 && "glCreateShader failed");
+    ASSERT(_object != 0 && "glCreateShader failed");
 
     //set the source code
     const char* code = shaderCode.c_str();
