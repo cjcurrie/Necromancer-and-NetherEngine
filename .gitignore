@@ -1,4 +1,8 @@
-*.DS_Store
+/Users/CJCurrie/Dropbox/Games in Production/Necromancer and NecroEngine/.DS_Store
+/Users/CJCurrie/Dropbox/Games in Production/Necromancer and NecroEngine/Necromancer/.DS_Store
+/Users/CJCurrie/Dropbox/Games in Production/Necromancer and NecroEngine/Necromancer/Necromancer/.DS_Store
+/Users/CJCurrie/Dropbox/Games in Production/Necromancer and NecroEngine/NetherEngine/.DS_Store
+/Users/CJCurrie/Dropbox/Games in Production/Necromancer and NecroEngine/NetherEngine/Errors and Debug/.DS_Store
 
 /Users/CJCurrie/Dropbox/Games in Production/Necromancer and NecroEngine/Third Party Software/glfw/libglfw.a
 
