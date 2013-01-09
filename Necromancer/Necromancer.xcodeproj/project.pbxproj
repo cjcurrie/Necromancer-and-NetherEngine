@@ -21,6 +21,8 @@
 		309C666C1693D69400DDDCD3 /* ShaderCompiler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 309C66671693D69400DDDCD3 /* ShaderCompiler.cpp */; };
 		30AAF13816976DEE00ED674A /* Shaders in Resources */ = {isa = PBXBuildFile; fileRef = 30AAF13716976DEE00ED674A /* Shaders */; };
 		30AAF13A16976E1700ED674A /* Models in Resources */ = {isa = PBXBuildFile; fileRef = 30AAF13916976E1700ED674A /* Models */; };
+		30F3EF3B169CA03F001DEE86 /* Log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30F3EF39169CA03F001DEE86 /* Log.cpp */; };
+		30F3EF40169CD205001DEE86 /* strings.txt in Resources */ = {isa = PBXBuildFile; fileRef = 30F3EF3F169CD205001DEE86 /* strings.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,6 +74,8 @@
 		309C66681693D69400DDDCD3 /* ShaderCompiler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShaderCompiler.h; sourceTree = "<group>"; };
 		30AAF13716976DEE00ED674A /* Shaders */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Shaders; sourceTree = "<group>"; };
 		30AAF13916976E1700ED674A /* Models */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Models; sourceTree = "<group>"; };
+		30F3EF39169CA03F001DEE86 /* Log.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Log.cpp; sourceTree = "<group>"; };
+		30F3EF3F169CD205001DEE86 /* strings.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = strings.txt; sourceTree = "<group>"; };
 		30F9AEA41683250B00B29F8B /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = ../../../../../../System/Library/Frameworks/Cocoa.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -204,9 +208,10 @@
 		309C66521693D69400DDDCD3 /* Errors and Debug */ = {
 			isa = PBXGroup;
 			children = (
-				309C66531693D69400DDDCD3 /* IProfileOutputHandler.h */,
 				309C66541693D69400DDDCD3 /* Log.h */,
+				30F3EF39169CA03F001DEE86 /* Log.cpp */,
 				309C66551693D69400DDDCD3 /* NEAssert.h */,
+				309C66531693D69400DDDCD3 /* IProfileOutputHandler.h */,
 				309C66561693D69400DDDCD3 /* ProfileLogHandler.h */,
 				309C66571693D69400DDDCD3 /* ProfileSample.h */,
 				30097CBD16972ADA00D4F5BE /* ProfileSample.cpp */,
@@ -252,6 +257,7 @@
 		309C666E1693D6E900DDDCD3 /* NecroResources */ = {
 			isa = PBXGroup;
 			children = (
+				30F3EF3F169CD205001DEE86 /* strings.txt */,
 				30AAF13916976E1700ED674A /* Models */,
 				30AAF13716976DEE00ED674A /* Shaders */,
 			);
@@ -332,6 +338,7 @@
 			files = (
 				30AAF13816976DEE00ED674A /* Shaders in Resources */,
 				30AAF13A16976E1700ED674A /* Models in Resources */,
+				30F3EF40169CD205001DEE86 /* strings.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -370,6 +377,7 @@
 				309C666B1693D69400DDDCD3 /* ShaderLoaderProgram.cpp in Sources */,
 				309C666C1693D69400DDDCD3 /* ShaderCompiler.cpp in Sources */,
 				30097CBE16972ADA00D4F5BE /* ProfileSample.cpp in Sources */,
+				30F3EF3B169CA03F001DEE86 /* Log.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -471,7 +479,10 @@
 					"\"$(SRCROOT)/../Third Party Software/glfw\"",
 				);
 				"LIBRARY_SEARCH_PATHS[arch=*]" = /opt/local/lib;
-				"OTHER_LDFLAGS[arch=*]" = "-lGLEW";
+				"OTHER_LDFLAGS[arch=*]" = (
+					"-lGLEW",
+					"-v",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = "";
 				WRAPPER_EXTENSION = app;

@@ -3,9 +3,9 @@
 #ifndef NEInc_StaticBufferWrapper_h
 #define NEInc_StaticBufferWrapper_h
 
-  #ifndef NEInc_NEAssert_h
-  #include "NEAssert.h"
-  #endif
+//  #ifndef NEInc_NEAssert_h
+//  #include "NEAssert.h"
+//  #endif
 
 namespace NE
 {
@@ -20,7 +20,7 @@ namespace NE
     public:
       inline T& operator [](int index)
       {
-        ASSERT(index<i && "Bad index on CMMBlob::[]");
+        ASSERT(index<i);    // msg = "Bad index on CMMBlob::[]"
         return buffer[index];
       }
     

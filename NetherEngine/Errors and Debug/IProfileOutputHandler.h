@@ -1,6 +1,8 @@
 #ifndef NEInc_IProfileOutputHandler_h
 #define NEInc_IProfileOutputHandler_h
 
+#include <iostream>
+
   namespace NE
   {
     class IProfilerOutputHandler

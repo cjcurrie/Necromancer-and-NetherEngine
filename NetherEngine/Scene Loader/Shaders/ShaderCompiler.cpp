@@ -1,6 +1,7 @@
 #include "ShaderCompiler.h"
 
-DEFINE_THIS_FILE;  // used by NEAssert.h to handle errors
+
+  DEFINE_THIS_FILE;  // used by NEAssert.h to handle errors
 
 
   NE::ShaderCompiler::ShaderCompiler(const std::string& shaderCode, GLenum shaderType) :  _object(0), _refCount(NULL)
@@ -9,7 +10,7 @@ DEFINE_THIS_FILE;  // used by NEAssert.h to handle errors
     _object = glCreateShader(shaderType);   // Returns a non-zero reference id for the shader object. (glGetShader(GLInt id))"
     
 
-    ASSERT(_object != 0 && "glCreateShader failed");
+    ASSERT(_object);     // msg = "glCreateShader failed"
 
     //set the source code
     const char* code = shaderCode.c_str();
@@ -95,13 +96,16 @@ DEFINE_THIS_FILE;  // used by NEAssert.h to handle errors
       return ShaderCompiler(sourceCodeStr, shaderType);
   }
 
-  void NE::ShaderCompiler::_retain() {
-      ASSERT(_refCount);
+  void NE::ShaderCompiler::_retain()
+  {
+      ASSERT(_refCount);    // msg = "Tried to retain a shader that has null _refCount pointer."
       *_refCount += 1;
   }
 
-  void NE::ShaderCompiler::_release() {
-      ASSERT(_refCount && *_refCount > 0);
+  void NE::ShaderCompiler::_release()
+  {
+      ASSERT(_refCount && *_refCount > 0);    // msg = "Tried to release a shader that is still being referenced."
+    
       *_refCount -= 1;
       if(*_refCount == 0){
           glDeleteShader(_object); _object = 0;

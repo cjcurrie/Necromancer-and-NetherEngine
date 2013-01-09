@@ -1,9 +1,9 @@
 #ifndef NEInc_ManMemPointer_h
 #define NEInc_ManMemPointer_h
 
-  #ifndef NEInc_NEAssert_h
-  #include "NEAssert.h"
-  #endif
+//  #ifndef NEInc_NEAssert_h
+//  #include "NEAssert.h"
+//  #endif
 
 // ==================
 //    Declaration
@@ -110,7 +110,7 @@ inline NE::ManMemPointer<T> NE::ManMemPointer<T>::operator =(const ManMemPointer
 template<class T>
 inline T& NE::ManMemPointer<T>::operator *() const
 {
-  ASSERT(obj!=0 && "Tried to * on a NULL smart pointer");
+  ASSERT(obj);     // msg = "Tried to * on a NULL smart pointer"
   return *obj;
 }
 
@@ -118,7 +118,7 @@ inline T& NE::ManMemPointer<T>::operator *() const
 template<class T>
 inline T* NE::ManMemPointer<T>::operator ->() const
 {
-  ASSERT(obj!=0 && "Tried to -> on a NULL smart pointer");
+  ASSERT(obj);     // msg = "Tried to -> on a NULL smart pointer"
   return obj;
 }
 

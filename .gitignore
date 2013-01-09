@@ -1,7 +1,9 @@
+*.DS_Store
+
 /Users/CJCurrie/Dropbox/Games in Production/Necromancer and NecroEngine/Third Party Software/glfw/libglfw.a
+
 /Users/CJCurrie/Dropbox/Games in Production/Necromancer and NecroEngine/Necromancer/Necromancer.xcodeproj
 /Users/CJCurrie/Dropbox/Games in Production/Necromancer and NecroEngine/Necromancer/NecromancerTests
 /Users/CJCurrie/Dropbox/Games in Production/Necromancer and NecroEngine/Necromancer/Necromancer/en.lproj
 /Users/CJCurrie/Dropbox/Games in Production/Necromancer and NecroEngine/Necromancer/Necromancer/Necromancer-Info.plist
 /Users/CJCurrie/Dropbox/Games in Production/Necromancer and NecroEngine/Necromancer/Necromancer/Necromancer-Prefix.pch
-/Users/CJCurrie/Dropbox/Games in Production/Necromancer and NecroEngine/.DS_Store

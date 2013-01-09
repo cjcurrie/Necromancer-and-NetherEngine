@@ -1,0 +1,2 @@
+This is the "working directory" for all MacOSX builds.
+This will later be the working directory for all builds.

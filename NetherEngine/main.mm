@@ -1,4 +1,4 @@
-/*
+jh/*
     main.mm
     A demonstration of the NetherEngine game engine
     by CJ Currie
@@ -12,163 +12,194 @@
 
 // @Damien: Make sure this main.mm file has an extension your compiler can use. *.mm is for Objective-C (and reg. c++) files on Mac.
 
+// ======================
+//      Global flags
+// ======================
+#define NE_DEBUG    // For testing builds only (debug on)
+
+//#define NOASSERT    // For published builds only (conserves space, eliminates ASSERT-family checks)
 
 #define MAC_BUILD
 //#define WIN_BUILD     // @Damien: toggle from mac to win here.
 //#define LIN_BUILD
 
 
-// standard C++ libraries
-//  @TODO: Verify the include sequence
-// Note we don't need to #ifndef before, because main.mm is guaranteed to be the first thing compiled.
-//   Consequently, we ought to define macros showing which non-NE libraries have been included. (Currently commented-out)
-
-// --- Standard libs ---
+// ======================
+// Standard C++ libraries
+// ======================
+  //#ifndef Inc_iostream
   #include <iostream>
-  //#define Inc_iostream
+  #define Inc_iostream
+  //#endif
 
+  //#ifndef Inc_cmath
   #include <cmath>
   //#define Inc_cmath
+  //#endif
 
   #include <stdexcept>
-  //#define Inc_stdexcept
 
 
-
-// --- Third-party libraries ---
-  #import <Foundation/Foundation.h>
-  #define Inc_Foundation_h
-
+// ======================
+//  Third-party libraries
+// ======================
+  #ifndef Inc_glew_h
   #include <GL/glew.h>
   #define Inc_glew_h
+  #endif
 
+  #ifndef Inc_glfw_h
   #include <GL/glfw.h>    // also includes glu.h
   #define Inc_glfw_h
+  #endif
 
+  #ifndef Inc_glm_hpp
   #include <glm/glm.hpp>
   #define Inc_glm_hpp
+  #endif
 
 
+// ======================
+//    Platform-specific
+// ======================
+  #ifdef MAC_BUILD
 
-// --- NE classes ---
+    #ifndef Inc_Foundation_h
+    #import <Foundation/Foundation.h>
+    #define Inc_Foundation_h
+    #endif
+
+    #ifndef Inc_CoreFoundation_h
+    #include "CoreFoundation/CoreFoundation.h"
+    #define Inc_CoreFoundation_h
+    #endif
+    
+  #endif
 
 
-  // ---- Memory, errors, and logging
+// ======================
+// NetherEngine libraries
+// ======================
 
-    /* Before NEAssert.h, we can #define NOASSERT in order to strip out all ASSERT() and ALLEGE() macros from NEAssert.h
-        Note that REQUIRE() ENSURE() and INVARIANT() will still evaluate and null-execute (do nothing). For now they stays.
-     */
-    // #define NOASSERT
+  // ---- Memory, errors, and logging ---
     #include "NEAssert.h"       // This works like c assert, but passes on
                                 //  to NEAssert::onAssert__(char const *file, unsigned line) afterward
 
     #include "ManagedMemObj.h"
 
+    #include "Log.h"
 
-  // ---- Rendering
+
+  // ---- Rendering ---
 
     #include "ShaderLoaderProgram.h"    // this #defines NEInc_ShaderLoaderProgram_h
 
 
 
+// ======================
+//   Program Declaration
+// ======================
+  using namespace NE;   // For the NetherEngine
 
-// === Program ===
-using namespace NE;   // For the NetherEngine
+  // Constant objects
+  const glm::vec2 SCREEN_SIZE(1200, 700);
 
-// constants
-const glm::vec2 SCREEN_SIZE(1200, 700);
-
-// globals
-ShaderLoaderProgram* g_ShaderLoaderProgram = NULL;
-GLuint g_VAO = 0;   // Vertex array object
-GLuint g_VBO = 0;   // Vertex buffer object
-
-
-// ============
-//  Since Obj-C headers are hard, here are some forward
-//  declarations instead
-// ============
-
-static void LoadShaders();
-static void LoadTriangles();
-static void Render();
-
-// === Main ===
-int main(int argc, char *argv[]) {
-  
-  
-  // --- Initialise GLFW
-  if(!glfwInit())     // Equivalent to returning GL_FALSE for failed initialization
-      throw std::runtime_error("glfwInit failed");
+  // Global objects
+  ShaderLoaderProgram* g_ShaderLoaderProgram = NULL;
+  GLuint g_VAO = 0;   // Vertex array object
+  GLuint g_VBO = 0;   // Vertex buffer object
 
 
-  // --- Open a window with GLFW
-  glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-  glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 3);
-  glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 2);       // Unfortunately, GLFW only supports 3.2 on Mac
-  glfwOpenWindowHint(GLFW_WINDOW_NO_RESIZE, GL_TRUE);
-
-  //Initialize window. Sets window width, height, red, blue, green, and alpha bit depth, depth ('z') buffer bit depth, stencil bit depth, and wheter to use windowed or fullscreen mode
-  if(!glfwOpenWindow(SCREEN_SIZE.x, SCREEN_SIZE.y, 8, 8, 8, 8, 0, 0, GLFW_WINDOW))
-      throw std::runtime_error("glfwOpenWindow failed. Can your hardware handle OpenGL 3.2?");
+  // Since Obj-C headers are hard, here are some forward  declarations instead
+  static void LoadShaders(), LoadTriangles(), Render(), EstablishWorkingDirectory();
 
 
-  // -- Initialise GLEW
-  #ifdef MAC_BUILD
-    glewExperimental = GL_TRUE; //stops glew crashing on OSX :-/
-  #endif
-  
-  if(glewInit() != GLEW_OK)
-      throw std::runtime_error("glewInit failed for an unknown reason.");
 
-  // Clears OpenGL errors
-  glGetError();
-
-  // print out some info about the graphics drivers
-  std::cout << "OpenGL version: " << glGetString(GL_VERSION) << std::endl;
-  std::cout << "GLSL version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << std::endl;
-  std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
-  std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
-  
-  
-  // load vertex and fragment shaders into opengl
-  LoadShaders();
-
-  // create buffer and fill it with the points of the triangle
-  LoadTriangles();
-  
-  
-  
-  // See if the initialization worked
-  // Unfortunately, main.mm is the only place we can't use ASSERT (due to DEFINE_THIS_FILE scope)
-  GLenum currentError = glGetError();
-  if (currentError != 0)
-  {
-    std::string msg = "OpenGL initialization sequence failed with error code ";
+// ======================
+//          Main
+// ======================
+  int main(int argc, char *argv[]) {
     
-    char errString[21]; // enough to hold all numbers up to 64-bits
-    sprintf(errString, "%d", currentError);
+    DEFINE_THIS_FILE;
     
-    throw std::runtime_error(msg + errString);
+    
+    EstablishWorkingDirectory();
+    
+    // --- Initialize the Log singleton
+      // We REQUIRE (like ENSURE and INVARIANT) instead of ASSERT because the evaluation operation needs must
+      //  be done even when NOASSERT is defined.
+    REQUIRE(Log::Get().Init());    // msg = "Log initialization failed."
+    
+    
+    // --- Initialise GLFW
+    REQUIRE(glfwInit() != GL_FALSE);    // msg = "glfwInit failed");
+
+
+    // --- Open a window with GLFW
+    glfwOpenWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwOpenWindowHint(GLFW_OPENGL_VERSION_MAJOR, 3);
+    glfwOpenWindowHint(GLFW_OPENGL_VERSION_MINOR, 2);       // Unfortunately, GLFW only supports 3.2 on Mac
+    glfwOpenWindowHint(GLFW_WINDOW_NO_RESIZE, GL_TRUE);
+
+    //Initialize window. Sets window width, height, red, blue, green, and alpha bit depth, depth ('z') buffer bit depth, stencil bit depth, and wheter to use windowed or fullscreen mode
+    REQUIRE(glfwOpenWindow(SCREEN_SIZE.x, SCREEN_SIZE.y, 8, 8, 8, 8, 0, 0, GLFW_WINDOW) == GL_TRUE);    // msg = "glfwOpenWindow failed. Can your hardware handle OpenGL 3.2?"
+
+
+    // -- Initialise GLEW
+    #ifdef MAC_BUILD
+      glewExperimental = GL_TRUE; //stops glew crashing on OSX :-/
+    #endif
+    
+    REQUIRE(glewInit() == GLEW_OK);    // msg = "glewInit failed for an unknown reason."
+
+    // Clears OpenGL errors
+    ENSURE(glGetError() != 0);  // msg = "GL error encountered"
+
+    
+    // print out some info about the graphics drivers. Condensing it like this is much faster than using separate calls.
+                                // Format
+    Log::Get().Write( LOG_USER, "OpenGL version: %s\n"
+                                "GLSL version: %s\n"
+                                "Vendor: %s\n"
+                                "Renderer: %s\n",
+                                // Arguments
+                                glGetString(GL_VERSION), glGetString(GL_SHADING_LANGUAGE_VERSION),
+                                glGetString(GL_VENDOR), glGetString(GL_RENDERER)
+                    );
+    
+    
+    // load vertex and fragment shaders into opengl
+    LoadShaders();
+
+    // create buffer and fill it with the points of the triangle
+    LoadTriangles();
+    
+    
+    
+    // See if the initialization worked
+    ENSURE(glGetError() == 0);    // msg = "GL error encountered"
+    
+
+    
+    // run while the window is open
+    while(glfwGetWindowParam(GLFW_OPENED)){
+        // draw one frame
+        Render();
+    }
+
+    // clean up and exit
+    glfwTerminate();        // All resources are freed. After this is called, glwfInit() must be executed before the library can be used again.
+
+    // Clean up any object left in our managed memory.
+    ManagedMemObj::CollectRemainingObjects( true );
+
+    return EXIT_SUCCESS;
   }
-  
 
-  
-  // run while the window is open
-  while(glfwGetWindowParam(GLFW_OPENED)){
-      // draw one frame
-      Render();
-  }
 
-  // clean up and exit
-  glfwTerminate();        // All resources are freed. After this is called, glwfInit() must be executed before the library can be used again.0
-
-  // Clean up any object left in our managed memory.
-  ManagedMemObj::CollectRemainingObjects( true );
-
-  return EXIT_SUCCESS;
-}
-
+// ========================
+//  Program Implementation
+// ========================
 
 // --- Platform-specific filesystem access ---
 #ifdef MAC_BUILD
@@ -347,4 +378,33 @@ static void Render() {
     
     // swap the display buffers (displays what was just drawn)
     glfwSwapBuffers();
+}
+
+static void EstablishWorkingDirectory()
+{
+  DEFINE_THIS_FILE;
+  
+  // @Damien: This method needs a windows version
+  
+  char path[PATH_MAX];
+    
+  #ifdef MAC_BUILD
+    // Note that "CoreFoundation/CoreFoundation.h" is used here
+  
+    // This makes relative paths work in C++ in Xcode by changing directory to the Resources folder inside the .app bundle
+  
+    CFBundleRef mainBundle = CFBundleGetMainBundle();
+    CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL(mainBundle);
+  
+    ENSURE( CFURLGetFileSystemRepresentation(resourcesURL, TRUE, (UInt8 *)path, PATH_MAX ) );     // msg = "idk why fail, bro"
+
+    CFRelease(resourcesURL);
+    
+    chdir(path);
+  
+  #endif
+  
+  // @TODO: other builds
+  
+  Log::Get().Write( LOG_USER, "Working directory: %s", path);
 }

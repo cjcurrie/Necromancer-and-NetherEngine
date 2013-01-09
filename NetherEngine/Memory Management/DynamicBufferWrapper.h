@@ -3,9 +3,9 @@
 #ifndef NEInc_DynamicBufferWrapper_h
 #define NEInc_DynamicBufferWrapper_h
 
-  #ifndef NEInc_NEAssert_h
-  #include "NEAssert.h"
-  #endif
+//  #ifndef NEInc_NEAssert_h
+//  #include "NEAssert.h"
+//  #endif
 
 namespace NE
 {
@@ -21,7 +21,7 @@ namespace NE
     public:
       inline T& operator [](int index)
       {
-        ASSERT(index<dataSize && "Bad index on CMMDynamicBlob::[]");
+        ASSERT(index<dataSize);     // msg = "Bad index on CMMDynamicBlob::[]"
         return buffer[index];
       }
     
@@ -35,7 +35,7 @@ namespace NE
       {
         dataSize = size;
         buffer = new T[size];
-        ASSERT(buffer!=0 && "DynamicBlob buffer could not be created - out of memory?");
+        ASSERT(buffer);     // msg = "DynamicBlob buffer could not be created - out of memory?"
       }
     
       ~DynamicBufferWrapper()

@@ -1,9 +1,9 @@
 #ifndef NEInc_ManagedMemObj_h
 #define NEInc_ManagedMemObj_h
 
-  #ifndef NEInc_NEAssert_h
-  #include "NEAssert.h"
-  #endif
+//  #ifndef NEInc_NEAssert_h
+//  #include "NEAssert.h"
+//  #endif
 
   #include <list>
 
@@ -59,8 +59,7 @@
     
     if(refCount<=0)
     {
-      ASSERT( this->it_positionInLiveList == liveObjects.end()
-             && "This Managed Memory object has already been moved into the deadObjects list.");
+      ASSERT( this->it_positionInLiveList == liveObjects.end() );     // msg = "This Managed Memory object has already been moved into the deadObjects list.");
       
       //liveObjects.remove(this);   // remove() does a traversal - bad
       liveObjects.erase(this->it_positionInLiveList);     // Unlike vectors and queues, iterators and pointers to items in lists retain

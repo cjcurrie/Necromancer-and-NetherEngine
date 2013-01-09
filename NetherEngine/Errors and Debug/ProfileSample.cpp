@@ -2,6 +2,7 @@
 #include "ProfileSample.h"
 #endif
 
+
 // ====================
 //    IMPLEMENTATION
 // ====================
@@ -41,11 +42,10 @@ NE::ProfileSample::ProfileSample(std::string sampleName)
     {
       if(samples[i].name == sampleName)
       {
-        //this is the sample we want
-        //check that it's not already open
-        //assert only works in debug builds, but given that you don't use
-        //the profiler in release builds, it doesn't really matter
-        ASSERT(!samples[i].isOpen && "Failed to profile a sample which was already being profiled");
+        // This is the sample we want. Check that it's not already open.
+        // Assert only works in !NOASSERT builds, but given that we don't use the profiler in release builds,
+        //  it shouldn't really matter.
+        ASSERT(!samples[i].isOpen);     // msg = "Failed to profile a sample which was already being profiled");
         
         //first, store its index
         iSampleIndex = i;
@@ -79,7 +79,7 @@ NE::ProfileSample::ProfileSample(std::string sampleName)
   
   //we've not found it, so it must be a new sample
   //use the storeIndex value to store the new sample
-  ASSERT(storeIndex >= 0 && "Profiler has run out of sample slots!");
+  ASSERT(storeIndex >= 0);    // msg = "Profiler has run out of sample slots!"
   
   samples[storeIndex].isValid = true;
   samples[storeIndex].name = sampleName;
@@ -138,7 +138,7 @@ void NE::ProfileSample::Output()
 {
   DEFINE_THIS_FILE;   // Required to use ASSERTions
   
-  ASSERT(outputHandler && "Profiler has no output handler set");
+  ASSERT(outputHandler);     // msg = "Profiler has no output handler set");
   
   outputHandler->BeginOutput();
   
@@ -195,7 +195,7 @@ void NE::ProfileSample::ResetSample( std::string sampleName )
     }
   }
   
-  ASSERT(storeIndex != -1 && "No profiler sample found to reset.");
+  ASSERT(storeIndex != -1);     // msg = "No profiler sample found to reset."
   
   samples[storeIndex].isValid = false;
 }

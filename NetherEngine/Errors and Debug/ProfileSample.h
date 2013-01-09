@@ -14,8 +14,6 @@
   #include "ProfileLogHandler.h"
   #endif
 
-  DEFINE_THIS_FILE;  // used by NEAssert.h to handle errors
-
 
 // ==================
 //    Declaration
@@ -27,7 +25,7 @@
   {
     class ProfileSample
     {
-      DEFINE_THIS_FILE;   // Used by NEAssert
+      //DEFINE_THIS_FILE;   // Used by NEAssert
       
       public:
         ProfileSample( std::string sampleName );
