@@ -1,7 +1,7 @@
 #ifndef NEInc_IProfileOutputHandler_h
-#define NEInc_IProfileOutputHandler_h
+  #define NEInc_IProfileOutputHandler_h
 
-#include <iostream>
+  #include <iostream>
 
   namespace NE
   {

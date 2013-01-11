@@ -1,14 +1,8 @@
 #include "ShaderLoaderProgram.h"
 
-#ifndef NEInc_ShaderCompiler_h
-#include "ShaderCompiler.h"
-#endif
 
-#include <stdexcept>
 
-using namespace NE;
-
-ShaderLoaderProgram::ShaderLoaderProgram(const std::vector<ShaderCompiler>& shadersNeededForScene) :
+NE::ShaderLoaderProgram::ShaderLoaderProgram(const std::vector<ShaderCompiler>& shadersNeededForScene) :
 _object(0)
 {
     if(shadersNeededForScene.size() <= 0)
@@ -48,16 +42,16 @@ _object(0)
     }
 }
 
-ShaderLoaderProgram::ShaderLoaderProgram() {
+NE::ShaderLoaderProgram::ShaderLoaderProgram() {
     //might be 0 if ctor fails by throwing exception
     if(_object != 0) glDeleteProgram(_object);
 }
 
-GLuint ShaderLoaderProgram::object() const {
+GLuint NE::ShaderLoaderProgram::object() const {
     return _object;
 }
 
-GLint ShaderLoaderProgram::attrib(const GLchar* attribName) const {
+GLint NE::ShaderLoaderProgram::attrib(const GLchar* attribName) const {
     if(!attribName)
         throw std::runtime_error("attribName was NULL");
     
@@ -68,7 +62,7 @@ GLint ShaderLoaderProgram::attrib(const GLchar* attribName) const {
     return attrib;
 }
 
-GLint ShaderLoaderProgram::uniform(const GLchar* uniformName) const {
+GLint NE::ShaderLoaderProgram::uniform(const GLchar* uniformName) const {
     if(!uniformName)
         throw std::runtime_error("uniformName was NULL");
     

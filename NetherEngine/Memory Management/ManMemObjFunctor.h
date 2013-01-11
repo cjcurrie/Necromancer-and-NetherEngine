@@ -1,32 +1,33 @@
 #ifndef NEInc_ManMemObjFunctor_h
-#define NEInc_ManMemObjFunctor_h
+  #define NEInc_ManMemObjFunctor_h
 
-  #ifndef NEInc_ManMemPointer_h
+  #include "Functor.h"
   #include "ManMemPointer.h"
-  #endif
 
-namespace NE
-{
-  template<class T>
-  class ManMemObjFunctor : public Functor
+  // Note that this Functor class will only template with objects that derive from ManagedMemObj
+
+  namespace NE
   {
-    protected:
-      ManMemPointer<T> obj;
-      typedef int (T::*funcType)();
-      funcType func;
-    
-    public:
-      AUTO_SIZE;
+    template<ManagedMemObj T>
+    class ManMemObjFunctor : public Functor
+    {
+      protected:
+        ManMemPointer<T> obj;
+        typedef int (T::*funcType)();
+        funcType func;
       
-      ManMemObjFunctor(T *o, funcType f)
-      {
-        obj = o;
-        func = f;
-      }
-      
-      void operator ()()
-      { return (obj->*func)(); }
-  };
-}
+      public:
+        AUTO_SIZE;
+        
+        ManMemObjFunctor(T *o, funcType f)
+        {
+          obj = o;
+          func = f;
+        }
+        
+        void operator ()()
+        { return (obj->*func)(); }
+    };
+  }
 
 #endif

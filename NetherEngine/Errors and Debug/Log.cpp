@@ -1,11 +1,7 @@
-#ifndef NEInc_Log_h
 #include "Log.h"
-#endif
+#include "Global.h"
 
-//#ifndef Inc_iostream
 #include <iostream>
-//#define Inc_iostream
-//#endif
 
 // ====================
 //    IMPLEMENTATION
@@ -28,7 +24,7 @@ bool NE::Log::Init()
   appLog.open("applicationLog.txt");
   clientLog.open("clientLog.txt");
   serverLog.open("serverlog.txt");
-  //user errors get logged to client
+  // Eser messages get logged to console
   
   //load the strings file
   if(!LoadStrings())return false;
@@ -36,12 +32,14 @@ bool NE::Log::Init()
   return true;
 }
 
-// Writes an integer
+// Writes an message based upon the message table, logStrings
 void NE::Log::Write(int target_enum, unsigned long msgID, ...)
 {
   // va_list is mapped to char* in the header
   va_list args;
   // va_start is a macro
+  
+  std::cout << "writing to " << msgID << ", which is " << logStrings[msgID] << std::endl;
   
   va_start(args, msgID);
   char szBuf[1024];
@@ -49,7 +47,7 @@ void NE::Log::Write(int target_enum, unsigned long msgID, ...)
   Write(target_enum,szBuf);
 }
 
-#define LOG_PREPEND_DATEANDTIME
+
 #ifdef LOG_PREPEND_DATEANDTIME
   #include <ctime>
 #endif
@@ -65,36 +63,47 @@ void NE::Log::Write(int target_enum, const char *msg, ...)   // Last parameter i
   vsprintf(buffer, msg, argList);
   
   #ifdef LOG_PREPEND_DATEANDTIME
-    #define TBUFF_MAXSIZE 32
+    const char TBUFF_MAXSIZE = 32;
     // Prepend the time
     char timeBuffer[TBUFF_MAXSIZE];
   
   
-  time_t rawtime = time(NULL);
+    time_t rawtime = time(NULL);
   
-  strftime (timeBuffer, TBUFF_MAXSIZE , "[%x %I:%M%p%z]\n", localtime(&rawtime) );
+    strftime (timeBuffer, TBUFF_MAXSIZE , "[%x %I:%M%p%z]\n", localtime(&rawtime) );
   #endif
   
-  if(target_enum & LOG_APP)    // Note the bitwise operation
+  if(target_enum & LOGTO_APP)    // Note the bitwise operation
   {
+    appLog << "\n";
     #ifdef LOG_PREPEND_DATEANDTIME
-        appLog << timeBuffer;
+      appLog << timeBuffer;
     #endif
-    
     appLog << buffer << "\n";
     
-    #ifdef NE_DEBUG    // Note that NE_DEBUG, like NOASSERT, is set in main.*
-          std::cout << "should be outputting";
-    appLog.flush();
+    /*
+      Note: flush() will immediately synchronize the file with the buffer. When !NE_DEBUG,
+        flush() does not occur, so the file is only synced when appLog is close()d or destroyed.
+        This happens when the appLog, etc. goes out of scope & is destructed, at the end of the program.
+        
+      Because we want to know FOR SURE where the final sync takes place during !NE_DEBUG,
+        main will call CloseAllLogs() at the end of the program.
+     
+      Log sync will also take place when the buffer object (buffer : char) is full.
+    */
+    
+    #ifdef NE_DEBUG    // Note that NE_DEBUG, like NOASSERT, is defined in Global.h
+      appLog.flush();   
+                      //  @TODO: close logs at end of runtime? Even outside of debug mode?
     #endif
   }
   
-  if(target_enum & LOG_CLIENT)
+  if(target_enum & LOGTO_CLIENT)
   {
+    clientLog << "\n";
     #ifdef LOG_PREPEND_DATEANDTIME
-        clientLog << timeBuffer;
+      clientLog << timeBuffer;
     #endif
-    
     clientLog << buffer << "\n";
     
     #ifdef NE_DEBUG
@@ -102,10 +111,11 @@ void NE::Log::Write(int target_enum, const char *msg, ...)   // Last parameter i
     #endif
   }
   
-  if(target_enum & LOG_SERVER)
+  if(target_enum & LOGTO_SERVER)
   {
+    serverLog << "\n";
     #ifdef LOG_PREPEND_DATEANDTIME
-        serverLog << timeBuffer;
+      serverLog << timeBuffer;
     #endif
     
     serverLog << buffer << "\n";
@@ -115,18 +125,17 @@ void NE::Log::Write(int target_enum, const char *msg, ...)   // Last parameter i
     #endif
   }
   
-  if(target_enum & LOG_USER)
+  if(target_enum & LOGTO_USER)
   {
+    std::cout << std::endl;
     #ifdef LOG_PREPEND_DATEANDTIME
         std::cout << timeBuffer;
     #endif
-    
     // @TODO: give the user some kind of output, such as a pop-up? (system-dependent)
-    // MessageBox(NULL,szBuf,"Message",MB_OK);
-    std::cout << buffer << std::endl;
+    std::cout << buffer << std::endl << std::endl;
   }
   
-  //va_end(argList);    // Release the variable-argument list macro
+  va_end(argList);    // Release the variable-argument list macro
 }
 
 
@@ -134,20 +143,40 @@ void NE::Log::Write(int target_enum, const char *msg, ...)   // Last parameter i
 //  any Write() operation will overwrite the entire contents of the log.
 bool NE::Log::LoadStrings()
 {
-  std::ifstream inStream("strings.txt");
+  char logStringPath[] = "logMessageStringTable.txt";
+  // @TODO: get from settings
+  
+  std::ifstream inStream(logStringPath);
   
   if( !inStream.is_open() )
   {
+    #ifdef NE_DEBUG
+      std::cout << "Could not open file " << logStringPath << "; ";
+      perror(NULL);
+    #endif
+    
     return false;
   }
   
   unsigned long int index=0;
   
-  while( !inStream.eof() )
+  // For testing, enable exceptions
+  inStream.exceptions ( std::ifstream::failbit | std::ifstream::badbit );
+  
+  try
   {
-    char szBuf[1024];
-    inStream.getline(szBuf,1024);
-    logStrings[index++] = szBuf;
+    while( !inStream.eof() )
+    {
+      char szBuf[MAX_LINE_LENGTH];
+      inStream.getline(szBuf, MAX_LINE_LENGTH);   // Has an implied line delimiter, '\n'
+      logStrings[index++] = szBuf;
+    }
+  }
+  catch (std::ifstream::failure e) {
+    #ifdef NE_DEBUG
+      std::cout << "Reading logStrings file threw error " << e.code() << ": " << e.what() << std::endl;
+    #endif
+    return false;
   }
   
   return true;

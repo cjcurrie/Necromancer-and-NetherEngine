@@ -21,10 +21,15 @@
         AUTO_SIZE;
         
         ObjFunctor(T *o, funcType f)
-        { obj=o; func=f; }
+        {
+          obj = o;
+          func = f;
+        }
         
         void operator ()()
-        { (obj->*func)(); }
+        {
+          (obj->*func)();
+        }
     };
   }
 

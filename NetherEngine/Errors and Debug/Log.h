@@ -1,5 +1,5 @@
 #ifndef NEInc_Log_h
-#define NEInc_Log_h
+  #define NEInc_Log_h
 
   #include <fstream>
 
@@ -8,14 +8,13 @@
   // ==================
   namespace NE
   {
-    // Constants used for byte flags
-    enum {LOG_APP=1, LOG_CLIENT=2, LOG_SERVER=4, LOG_USER=8 };
-
-    #define MAX_LOG_STRINGS 256
-
     class Log
     {
+      const static unsigned short MAX_LOG_STRINGS = 256,
+                                  MAX_LINE_LENGTH = 512;
+      
       protected:
+      
         // Constructor
         Log();
       
@@ -23,12 +22,15 @@
         std::ofstream appLog;
         std::ofstream clientLog;
         std::ofstream serverLog;
-        
-        std::string logStrings[MAX_LOG_STRINGS];
+      
+        std::string logStrings[MAX_LOG_STRINGS];    // logStrings is a flyweight object used to cache all the standard messages.
       
         bool LoadStrings();
         
       public:
+        // Constants used for byte flags
+        enum {LOGTO_APP=1, LOGTO_CLIENT=2, LOGTO_SERVER=4, LOGTO_USER=8 };
+      
         static Log &Get();
         
         bool Init();

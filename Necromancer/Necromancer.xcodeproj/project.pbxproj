@@ -16,13 +16,16 @@
 		302E7BB21688EBEA00B6CF2C /* libglfw.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 302E7BB11688EBEA00B6CF2C /* libglfw.a */; };
 		303CBA4A1686E8080036BD45 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30F9AEA41683250B00B29F8B /* Cocoa.framework */; };
 		303CBA4D1686EA2D0036BD45 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 303CBA4C1686EA2D0036BD45 /* IOKit.framework */; };
+		3074880A169ED0F20059D1ED /* SettingsManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30748809169ED0F20059D1ED /* SettingsManager.cpp */; };
+		3074880C169F6E800059D1ED /* ManagedMemObj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3074880B169F6E800059D1ED /* ManagedMemObj.cpp */; };
+		30748810169F80E60059D1ED /* ProfileLogHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3074880F169F80E60059D1ED /* ProfileLogHandler.cpp */; };
 		309C666A1693D69400DDDCD3 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 309C66581693D69400DDDCD3 /* main.mm */; };
 		309C666B1693D69400DDDCD3 /* ShaderLoaderProgram.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 309C66641693D69400DDDCD3 /* ShaderLoaderProgram.cpp */; };
 		309C666C1693D69400DDDCD3 /* ShaderCompiler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 309C66671693D69400DDDCD3 /* ShaderCompiler.cpp */; };
 		30AAF13816976DEE00ED674A /* Shaders in Resources */ = {isa = PBXBuildFile; fileRef = 30AAF13716976DEE00ED674A /* Shaders */; };
 		30AAF13A16976E1700ED674A /* Models in Resources */ = {isa = PBXBuildFile; fileRef = 30AAF13916976E1700ED674A /* Models */; };
 		30F3EF3B169CA03F001DEE86 /* Log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30F3EF39169CA03F001DEE86 /* Log.cpp */; };
-		30F3EF40169CD205001DEE86 /* strings.txt in Resources */ = {isa = PBXBuildFile; fileRef = 30F3EF3F169CD205001DEE86 /* strings.txt */; };
+		30F3EF40169CD205001DEE86 /* logMessageStringTable.txt in Resources */ = {isa = PBXBuildFile; fileRef = 30F3EF3F169CD205001DEE86 /* logMessageStringTable.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +55,13 @@
 		302E7BB11688EBEA00B6CF2C /* libglfw.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libglfw.a; sourceTree = "<group>"; };
 		303CBA4C1686EA2D0036BD45 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = ../../../../../../System/Library/Frameworks/IOKit.framework; sourceTree = "<group>"; };
 		304C51881687F438007167B3 /* libglfw.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libglfw.a; path = "../Third Party Software/glfw/libglfw.a"; sourceTree = "<group>"; };
+		30748806169EB5940059D1ED /* ListDator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ListDator.h; sourceTree = "<group>"; };
+		30748808169EC4BE0059D1ED /* SettingsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsManager.h; sourceTree = "<group>"; };
+		30748809169ED0F20059D1ED /* SettingsManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SettingsManager.cpp; sourceTree = "<group>"; };
+		3074880B169F6E800059D1ED /* ManagedMemObj.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ManagedMemObj.cpp; sourceTree = "<group>"; };
+		3074880F169F80E60059D1ED /* ProfileLogHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ProfileLogHandler.cpp; sourceTree = "<group>"; };
+		30748817169FF0A10059D1ED /* DIR_README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = DIR_README.txt; sourceTree = "<group>"; };
+		30748818169FFDED0059D1ED /* Global.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Global.h; sourceTree = "<group>"; };
 		309C66511693D69400DDDCD3 /* Engine Layout.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "Engine Layout.gif"; sourceTree = "<group>"; };
 		309C66531693D69400DDDCD3 /* IProfileOutputHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IProfileOutputHandler.h; sourceTree = "<group>"; };
 		309C66541693D69400DDDCD3 /* Log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Log.h; sourceTree = "<group>"; };
@@ -75,7 +85,9 @@
 		30AAF13716976DEE00ED674A /* Shaders */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Shaders; sourceTree = "<group>"; };
 		30AAF13916976E1700ED674A /* Models */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Models; sourceTree = "<group>"; };
 		30F3EF39169CA03F001DEE86 /* Log.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Log.cpp; sourceTree = "<group>"; };
-		30F3EF3F169CD205001DEE86 /* strings.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = strings.txt; sourceTree = "<group>"; };
+		30F3EF3F169CD205001DEE86 /* logMessageStringTable.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = logMessageStringTable.txt; sourceTree = "<group>"; };
+		30F3EF42169D2E78001DEE86 /* BaseDator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseDator.h; sourceTree = "<group>"; };
+		30F3EF44169D31CB001DEE86 /* Dator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Dator.h; sourceTree = "<group>"; };
 		30F9AEA41683250B00B29F8B /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = ../../../../../../System/Library/Frameworks/Cocoa.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -184,9 +196,20 @@
 			path = glfw;
 			sourceTree = "<group>";
 		};
+		30748807169EC4A40059D1ED /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				30748808169EC4BE0059D1ED /* SettingsManager.h */,
+				30748809169ED0F20059D1ED /* SettingsManager.cpp */,
+				30748818169FFDED0059D1ED /* Global.h */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
 		309C664F1693D69400DDDCD3 /* NetherEngine */ = {
 			isa = PBXGroup;
 			children = (
+				30748807169EC4A40059D1ED /* Settings */,
 				309C66501693D69400DDDCD3 /* Engine Reference */,
 				309C66521693D69400DDDCD3 /* Errors and Debug */,
 				309C66581693D69400DDDCD3 /* main.mm */,
@@ -213,6 +236,7 @@
 				309C66551693D69400DDDCD3 /* NEAssert.h */,
 				309C66531693D69400DDDCD3 /* IProfileOutputHandler.h */,
 				309C66561693D69400DDDCD3 /* ProfileLogHandler.h */,
+				3074880F169F80E60059D1ED /* ProfileLogHandler.cpp */,
 				309C66571693D69400DDDCD3 /* ProfileSample.h */,
 				30097CBD16972ADA00D4F5BE /* ProfileSample.cpp */,
 			);
@@ -225,12 +249,16 @@
 				309C665A1693D69400DDDCD3 /* DynamicBufferWrapper.h */,
 				309C665B1693D69400DDDCD3 /* Functor.h */,
 				309C665C1693D69400DDDCD3 /* ManagedMemObj.h */,
-				309C665D1693D69400DDDCD3 /* ManMemObjFunctor.h */,
+				3074880B169F6E800059D1ED /* ManagedMemObj.cpp */,
 				309C665E1693D69400DDDCD3 /* ManMemPointer.h */,
 				309C665F1693D69400DDDCD3 /* ObjFunctor.h */,
+				309C665D1693D69400DDDCD3 /* ManMemObjFunctor.h */,
 				309C66601693D69400DDDCD3 /* RingBuffer.h */,
 				309C66611693D69400DDDCD3 /* Singleton.h */,
 				309C66621693D69400DDDCD3 /* StaticBufferWrapper.h */,
+				30F3EF42169D2E78001DEE86 /* BaseDator.h */,
+				30F3EF44169D31CB001DEE86 /* Dator.h */,
+				30748806169EB5940059D1ED /* ListDator.h */,
 			);
 			path = "Memory Management";
 			sourceTree = "<group>";
@@ -238,8 +266,8 @@
 		309C66631693D69400DDDCD3 /* Scene Loader */ = {
 			isa = PBXGroup;
 			children = (
-				309C66641693D69400DDDCD3 /* ShaderLoaderProgram.cpp */,
 				309C66651693D69400DDDCD3 /* ShaderLoaderProgram.h */,
+				309C66641693D69400DDDCD3 /* ShaderLoaderProgram.cpp */,
 				309C66661693D69400DDDCD3 /* Shaders */,
 			);
 			path = "Scene Loader";
@@ -248,8 +276,8 @@
 		309C66661693D69400DDDCD3 /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
-				309C66671693D69400DDDCD3 /* ShaderCompiler.cpp */,
 				309C66681693D69400DDDCD3 /* ShaderCompiler.h */,
+				309C66671693D69400DDDCD3 /* ShaderCompiler.cpp */,
 			);
 			path = Shaders;
 			sourceTree = "<group>";
@@ -257,7 +285,8 @@
 		309C666E1693D6E900DDDCD3 /* NecroResources */ = {
 			isa = PBXGroup;
 			children = (
-				30F3EF3F169CD205001DEE86 /* strings.txt */,
+				30748817169FF0A10059D1ED /* DIR_README.txt */,
+				30F3EF3F169CD205001DEE86 /* logMessageStringTable.txt */,
 				30AAF13916976E1700ED674A /* Models */,
 				30AAF13716976DEE00ED674A /* Shaders */,
 			);
@@ -338,7 +367,7 @@
 			files = (
 				30AAF13816976DEE00ED674A /* Shaders in Resources */,
 				30AAF13A16976E1700ED674A /* Models in Resources */,
-				30F3EF40169CD205001DEE86 /* strings.txt in Resources */,
+				30F3EF40169CD205001DEE86 /* logMessageStringTable.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -378,6 +407,9 @@
 				309C666C1693D69400DDDCD3 /* ShaderCompiler.cpp in Sources */,
 				30097CBE16972ADA00D4F5BE /* ProfileSample.cpp in Sources */,
 				30F3EF3B169CA03F001DEE86 /* Log.cpp in Sources */,
+				3074880A169ED0F20059D1ED /* SettingsManager.cpp in Sources */,
+				3074880C169F6E800059D1ED /* ManagedMemObj.cpp in Sources */,
+				30748810169F80E60059D1ED /* ProfileLogHandler.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

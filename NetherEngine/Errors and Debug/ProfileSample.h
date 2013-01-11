@@ -1,31 +1,20 @@
 #ifndef NEInc_ProfileSample_h
-#define NEInc_ProfileSample_h
+  #define NEInc_ProfileSample_h
 
-  #ifndef Inc_glfw_h
-    #include <GL/glfw.h>    // also includes glu.h
-    #define Inc_glfw_h
-  #endif
+  #include "IProfileOutputHandler.h"
 
-  #ifndef NEInc_NEAssert_h
-  #include "NEAssert.h"
-  #endif
-
-  #ifndef NEInc_ProfileLogHandler_h
-  #include "ProfileLogHandler.h"
-  #endif
-
+  #include <GL/glfw.h>    // also includes glu.h
+  #include <string>
 
 // ==================
 //    Declaration
 // ==================
 
-  #define MAX_PROFILER_SAMPLES 999
-
   namespace NE
   {
     class ProfileSample
     {
-      //DEFINE_THIS_FILE;   // Used by NEAssert
+      const static unsigned short MAX_PROFILER_SAMPLES = 999;
       
       public:
         ProfileSample( std::string sampleName );

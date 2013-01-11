@@ -1,0 +1,3 @@
+err0: Null reference
+err1: Unsafe context
+err2: <undefined>

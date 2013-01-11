@@ -1,34 +1,34 @@
-#ifndef NEInc_ProfileSample_h
 #include "ProfileSample.h"
-#endif
+
+#include "ProfileLogHandler.h"
+
+#include "NEAssert.h"
+DEFINE_THIS_FILE;
 
 
 // ====================
 //    IMPLEMENTATION
 // ====================
 
-// Static vars
-NE::IProfilerOutputHandler *NE::ProfileSample::outputHandler = new NE::ProfileLogHandler();
-int NE::ProfileSample::lastOpenedSample = 0;
-int NE::ProfileSample::openSampleCount = 0;
-float NE::ProfileSample::rootBegin = 0;
-float NE::ProfileSample::rootEnd = 0;
-NE::ProfileSample::profileSample NE::ProfileSample::samples[MAX_PROFILER_SAMPLES];
+// --- Static definitions
+  NE::IProfilerOutputHandler *NE::ProfileSample::outputHandler = new NE::ProfileLogHandler();
 
+  int NE::ProfileSample::lastOpenedSample = 0;
+  int NE::ProfileSample::openSampleCount = 0;
+  float NE::ProfileSample::rootBegin = 0;
+  float NE::ProfileSample::rootEnd = 0;
 
+  NE::ProfileSample::profileSample NE::ProfileSample::samples[MAX_PROFILER_SAMPLES];
 
 
 NE::ProfileSample::ProfileSample(std::string sampleName)
 {
-  DEFINE_THIS_FILE;   // Required to use ASSERTions
   
-  //The first thing we need to do is restore our previous pieces of sample
-  //data from storage. That is, look in the samples[] array to see if there's
-  //a valid sample with our name on it
-  int i=0;
-  //If we don't find it, we're going to need to create a new sample, and rather
-  //than looping through the list a second time we store the first non-valid
-  //index that we find this time round
+  // First restore the previous pieces of sample data from storage. Look through samples[] to see if there's
+  //  a valid sample with same name. If it can't be found, create a new sample.
+  
+  int i = 0;
+  
   int storeIndex=-1;
   
   for(i=0; i<MAX_PROFILER_SAMPLES; ++i)
@@ -136,7 +136,6 @@ NE::ProfileSample::~ProfileSample()
 
 void NE::ProfileSample::Output()
 {
-  DEFINE_THIS_FILE;   // Required to use ASSERTions
   
   ASSERT(outputHandler);     // msg = "Profiler has no output handler set");
   
@@ -183,7 +182,6 @@ void NE::ProfileSample::Output()
 
 void NE::ProfileSample::ResetSample( std::string sampleName )
 {
-  DEFINE_THIS_FILE;   // Required to use ASSERTions
   
   int storeIndex = -1;
   

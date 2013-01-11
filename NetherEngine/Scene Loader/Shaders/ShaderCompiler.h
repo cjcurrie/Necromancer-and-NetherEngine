@@ -1,21 +1,9 @@
 #ifndef NEInc_ShaderCompiler_h
-#define NEInc_ShaderCompiler_h
+  #define NEInc_ShaderCompiler_h
 
-  #ifndef Inc_glew_h
-  #define Inc_glew_h
   #include <GL/glew.h>
-  #endif
-  
-  #ifndef NEInc_NEAssert_h
-  #include "NEAssert.h"
-  #endif
+  #include <string>
 
-
-  //#include <string>
-
-  #include <stdexcept>
-
-#include <fstream>
 
 namespace NE
 {

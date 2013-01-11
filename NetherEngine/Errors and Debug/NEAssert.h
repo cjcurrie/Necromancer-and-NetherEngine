@@ -7,14 +7,16 @@
 #ifndef NEInc_NEAssert_h
   #define NEInc_NEAssert_h
 
+  #define MAX_PATH 512
+
   /* ASSERT and ALLEGE have been disabled */
   #ifdef NOASSERT
 
     #define DEFINE_THIS_FILE
 
     // Makes these two macros useless.
-    #define ASSERT(ignore_) ((void)0)
-    #define ALLEGE(test_)   ((void)(test_))   // When NOASSERT, ALLEGE = REQUIRE = ENSURE = INVARIANT
+    #define ASSERT(ignore_params) ((void)0)         // ASSERT's arguments and their side effects will only be evaluated when !NOASSERT
+    #define ALLEGE(test_params)   ((void)(test_params))   // When NOASSERT, ALLEGE will still have its side-effects evaluated.
 
   /* All assertions are enabled */
   #else
@@ -24,10 +26,6 @@
       extern "C" {
     #endif
 
-    //#ifndef Inc_iostream
-    //#include <iostream>
-    //#define Inc_iostream
-    //#endif
           
     /* This is the global callback used when an assertion fails. */
     static void onAssert__(char const *file, unsigned line);
@@ -37,12 +35,13 @@
     #endif
 
 
-    #define DEFINE_THIS_FILE  constexpr static char const THIS_FILE__[] = __FILE__
+    #define DEFINE_THIS_FILE \
+      static const char THIS_FILE__[] = __FILE__
 
 
     // This is the main assert macro used. Failures are sent to onAssert__()
-    #define ASSERT(test_) \
-      ( (test_)?(void)0 : onAssert__(THIS_FILE__, __LINE__) )
+    #define ASSERT(test_params) \
+      ( (test_params)?(void)0 : onAssert__(THIS_FILE__, __LINE__) )
 
 
     /*
@@ -55,12 +54,15 @@
     #define ALLEGE(test_) ASSERT(test_)
   #endif
 
-  // Here are three always-enabled alternatives to ASSERT
-  #define REQUIRE(test_)    ALLEGE(test_)    // Pre
-  #define ENSURE(test_)     ALLEGE(test_)     // Post
-  #define INVARIANT(test_)  ALLEGE(test_)  // always
+  // Here are three tools used to Design by Contract. They will always have their side-effects evaluated.
+  #define REQUIRE(test_)    ASSERT(test_)    // Pre
+  #define ENSURE(test_)     ASSERT(test_)    // Post
+  #define INVARIANT(test_)  ASSERT(test_)    // always
 
+#ifndef Inc_iostream
 #include <iostream>
+#define Inc_iostream
+#endif
 
 /* This is the global callback used when an assertion fails. */
 static void onAssert__(char const *file, unsigned line)
