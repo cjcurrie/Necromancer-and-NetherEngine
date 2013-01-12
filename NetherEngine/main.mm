@@ -52,7 +52,6 @@
 // NetherEngine libraries
 // ======================
   #include "NEAssert.h"
-  DEFINE_THIS_FILE;           // Required for the preprocessor to use ASSERT-family calls from NEAssert.h
 
 
   // ---- Memory, errors, and logging ---
@@ -63,6 +62,10 @@
 
   // ---- Rendering ---
     #include "ShaderLoaderProgram.h"    // this #defines NEInc_ShaderLoaderProgram_h
+
+  // --- Test ---
+    #include "ManMemPointer.h"
+    #include "ManagedMemObj.h"
 
 
 // ======================
@@ -90,19 +93,18 @@
 // ======================
   int main(int argc, char *argv[])
   {
+//    DEFINE_THIS_FILE;   // If exactly one ASSERT-family call is used in this scope, then convert it to UNCACHED_ASSERT.
+//                        //  Else, DEFINE_THIS_FILE will conserve ROM for all ASSERT calls in this scope.
     
     // Run the initialization routines
     OnApplicationBegin();
     
-    Log::Get().Write( Log::LOGTO_APP, "App test");
-    Log::Get().Write( Log::LOGTO_CLIENT, "Client test");
-    Log::Get().Write( Log::LOGTO_SERVER, "Server test");
     
     
     #ifdef NE_DEBUG
-      // print out some info about the graphics drivers. Condensing it like this is much faster than using separate calls.
+      // List some info about the graphics drivers. Condensing it like this is much faster than using separate calls to Log.
                                   // Format
-      Log::Get().Write( Log::LOGTO_USER, "OpenGL version: %s\n"
+      Log::Get().Write( Log::LOGTO_CONSOLE, "OpenGL version: %s\n"
                                   "GLSL version: %s\n"
                                   "Vendor: %s\n"
                                   "Renderer: %s\n",
@@ -154,6 +156,12 @@ static void OnApplicationBegin()
   EstablishWorkingDirectory();
   
   // --- Initialize the Log singleton
+  
+  // DEFINE_THIS_FILE here because there is no other appropriate, non-global scope
+  //  and ASSERT is used multiple times in this method; we could benefit from
+  //  the caching.
+//  DEFINE_THIS_FILE;
+  
   // We ALLEGE instead of ASSERT because the evaluation operation needs must
   //  be done even when NOASSERT is defined.
   ALLEGE(Log::Get().Init());    // msg = "Log initialization failed."
@@ -182,8 +190,13 @@ static void OnApplicationBegin()
 
 static void OnApplicationEnd()
 {
+  Log::Get().CloseAllLogs();
+  
   // Clean up any object left in our managed memory.
   ManagedMemObj::CollectRemainingObjects( true );
+  
+  // Console isn't a log so we can still write to it.
+  Log::Get().Write("Application exited successfully.");
 }
 
 
@@ -398,6 +411,6 @@ static void EstablishWorkingDirectory()
   // @TODO: other builds
   
   #ifdef NE_DEBUG
-    Log::Get().Write( Log::LOGTO_USER, "Working directory set to: %s", path);
+    Log::Get().Write( Log::LOGTO_CONSOLE, "Working directory set to: %s", path);
   #endif
 }

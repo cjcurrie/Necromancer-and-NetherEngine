@@ -1,6 +1,7 @@
 #ifndef NEInc_ManMemPointer_h
   #define NEInc_ManMemPointer_h
 
+  #include "NEAssert.h"     // NEAssert.h includes Global.h
   #include "ManagedMemObj.h"
 
   // Note that this class is templated and thus must be defined (inline)
@@ -14,6 +15,11 @@
   //  because the SP needs the support of a managed memory class. If an instrinsic type object needs to be smart-pointed,
   //  a wrapper class may be created that inherits from both ManagedMemObj and the intrinsic type.
 
+
+  // ======= IMPORTANT!!! =======
+  // Operation 'delete mmPtr : ManMemPointer' is totally illegal because it deletes *mmPtr.
+  //  If other ManMemPointers are still referencing *mmPtr, then GarbageCollect will try to
+  //  destruct the already-deallocated data once those other pointers all go off the stack.
 
 
 
@@ -64,9 +70,12 @@
   {
     
     template <typename T>
+    // A compiler error on this line such as "Implicit instantiation of undefined template" means
+    //  that T does not derive from base class ManagedMemObj and therefore is invalid. The 
+    //  check<relationship<,>> format will allow implicit instantiation of the base class,
+    //  so long as its not virtual (as ManagedMemObj is).
     class ManMemPointer : public check< relationship<T, ManagedMemObj>::exists >
-    {
-      
+    {      
       protected:
         T *data;    // T derives from ManagedMemObj, which is virtual.
       
@@ -75,65 +84,71 @@
         // Default constructor
         ManMemPointer()
         {
-          data = 0;   // Set the data pointer to zero.
+          data = NULL;   // Set the data pointer to zero.
         }
       
       
         // Note: there is no copy constructor that accepts a value parameter - only pointers or references.
       
-      
-        // --- Copy value
-        ManMemPointer(ManMemPointer<T> *other)    // Copy from other ManMemPointer
-                                                  //  Note this only works when other's T type and this object's T type are the same
-        {        
-          *data = *other;    // Now this->data's value equals other->data's value, where each is a ManagedMemObj. One can subsequently be changed without affecting the other.
-        }
+        // --- Copy constructor for type T* : ManagedMemObj
+        // This is invoked when this objects is declared and defined on the same line
+        //  e.g. ManMemPointer<myClass : ManagedMemObj> stbw_ptr = new StaticBufferWrapper();
+        ManMemPointer(T *other)
+        {
+          data = other;
           
+          if(data != NULL)
+            data->AddReference();        // Increase the refCount of new object
+        }
       
-        // --- Copy reference
+        // --- Copy by value from other MMPtr
         ManMemPointer(const ManMemPointer<T> &other)    // Copy from another ManMemPointer's address
         {
-          data = other;    // this->data now points to the address of other's value. The values are now linked.
+          data = other;    // this->data and other-> now point to the same place.
+          
+          if(data != NULL)
+            data->AddReference();
         }
       
         // Destructor
-        ~ManMemPointer()
-        {
-          if(data)
+        ~ManMemPointer()    // Virtual, so no need to initialize base class
+        { 
+          if(data != NULL)
             data->ReleaseReference();
         }
+      
 
       
         // --- Assign from pointer to something that derives from ManMemObj
-        inline ManMemPointer<T> operator =(const T &other)
+        inline void operator =(T *other)    // You don't want this to be assign-chain-able, so return void
         {
-//          if(data)
-//            ((ManagedMemObj)*data).ReleaseReference();    // Release the old object
+          if(data != NULL)
+            data->ReleaseReference();    // Release the old object
           
           data = other;   // data is now the value of the address of other
           
-//          if(data)
-//            ((ManagedMemObj)*data).AddReference();        // Increase the refCount of new object
-          
-          return *this;   // Return this object's value
+          if(data != NULL)
+            data->AddReference();        // Increase the refCount of new object
         }
+      
+        // Assign from pointer to something that derives from ManMemObj
+
       
       
         // --- Assign from another smart pointer
-        inline ManMemPointer<T> operator =(const ManMemPointer<T> &other)
+        inline void operator =(const ManMemPointer<T> &other)
         {
+//          DEFINE_THIS_FILE;
           REQUIRE(data != other);   // msg = "Cannot assign one smart pointer to another when they each point to the same object".
           
-//          if(data)
-//            data->ManagedMemObj::ReleaseReference();
+          if(data != NULL)
+            data->ReleaseReference();
           
           data = other.data;    // data is now the value of other's data pointer
           
-//          if(data)
-//            ((ManagedMemObj)*data).AddReference();
+          if(data != NULL)
+            data->AddReference();
           // Else, this object was assigned a ManMemPointer with no pointer
-            
-          return *this;   // Return this object's value
         }
       
       
@@ -141,6 +156,7 @@
         // --- Access as a reference
         inline T& operator *() const
         {
+//          DEFINE_THIS_FILE;
           REQUIRE(data != 0);     // msg = "Tried to * (reference) a managed-memory smart pointer with NULL value"
           return *data;
         }
@@ -148,6 +164,7 @@
         // --- Access as a pointer
         inline T* operator ->() const
         {
+//          DEFINE_THIS_FILE;
           REQUIRE(data != 0);     // msg = "Tried to -> on a NULL smart pointer"
           return data;
         }

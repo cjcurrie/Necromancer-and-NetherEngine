@@ -1,7 +1,7 @@
 #include "ShaderCompiler.h"
 
 #include "NEAssert.h"
-DEFINE_THIS_FILE;
+//DEFINE_THIS_FILE;
 
 #include <fstream>
 

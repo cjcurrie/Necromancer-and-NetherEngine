@@ -2,15 +2,24 @@
   #define NEInc_Singleton_h
 
   #include "NEAssert.h"
-  DEFINE_THIS_FILE;  // used by NEAssert.h to handle errors
+
+  /*
+    Note:
+      When possible to use, local static objects are MUCH better than singleton patterns because they:
+        - Automatically get destructed when they leave the stack (no guarantee with singletons [or
+            any heap-allocated object created with the 'new' keyword, for that matter]). 
+        - Can't be accessed before they are created. An object declared as a Singleton can't be
+            accessed until it's defined, but static objects are available immediately after 
+            compile-time.
+        - The above properties make static objects easier to debug.
+  */
 
   namespace NE
   {
     template<typename T>
     class Singleton
-    {
-      
-      static T* ms_singleton;
+    { 
+      static T* ms_singleton;   // Only one instance of ms_singleton can exist per type.
       
       public:
         Singleton()

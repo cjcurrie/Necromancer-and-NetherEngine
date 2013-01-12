@@ -3,7 +3,7 @@
 #include "ProfileLogHandler.h"
 
 #include "NEAssert.h"
-DEFINE_THIS_FILE;
+//DEFINE_THIS_FILE;
 
 
 // ====================
@@ -43,8 +43,6 @@ NE::ProfileSample::ProfileSample(std::string sampleName)
       if(samples[i].name == sampleName)
       {
         // This is the sample we want. Check that it's not already open.
-        // Assert only works in !NOASSERT builds, but given that we don't use the profiler in release builds,
-        //  it shouldn't really matter.
         ASSERT(!samples[i].isOpen);     // msg = "Failed to profile a sample which was already being profiled");
         
         //first, store its index

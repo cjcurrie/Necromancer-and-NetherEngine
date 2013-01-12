@@ -2,7 +2,7 @@
   #define NEInc_Dator_h
 
   #include "NEAssert.h"
-  DEFINE_THIS_FILE;
+
   #include "BaseDator.h"
 
   #include <sstream>
@@ -14,8 +14,7 @@
   {
     template<class T>
     class Dator : public BaseDator
-    {
-      
+    {      
       protected:
         T &target;
         
@@ -43,6 +42,7 @@
           str << input;   // Put input into the buffer
           str >> result;     // Get input from the buffer. Now it's type T
           
+          
           ASSERT( !str.fail() );    // msg = "Conversion operation failed. Was the type of target an allowed type?"
           
           return result;
@@ -57,6 +57,7 @@
           
           str << input;
           str >> result;
+          
           
           ASSERT( !str.fail() );
           

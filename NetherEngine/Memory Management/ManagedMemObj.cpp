@@ -1,8 +1,5 @@
 #include "ManagedMemObj.h"
 
-#include "NEAssert.h"
-DEFINE_THIS_FILE;
-
 #include "Log.h"
 
 
@@ -21,7 +18,10 @@ DEFINE_THIS_FILE;
 NE::ManagedMemObj::ManagedMemObj()
 {
   liveObjects.push_back(this);
-  this->it_positionInLiveList = liveObjects.end();     // So the object can quickly remove itself from the static list
+  
+  // Move to one element past the last element, then take a step back to the last element (the one we just added).
+  this->it_positionInLiveList = liveObjects.end();
+  this->it_positionInLiveList--;
   
   // Initialise refCount to zero
   this->refCount=0;
@@ -35,34 +35,11 @@ NE::ManagedMemObj::~ManagedMemObj()
 }
 
 // === Methods ===
-inline void NE::ManagedMemObj::AddReference()
-{
-  ++refCount;
-}
-
-inline void NE::ManagedMemObj::ReleaseReference()
-{
-  
-  --refCount;
-  
-  if(refCount<=0)
-  {
-    ASSERT( this->it_positionInLiveList == liveObjects.end() );     // msg = "This Managed Memory object has already been moved into the deadObjects list.");
-    
-    //liveObjects.remove(this);   // remove() does a traversal - bad
-    liveObjects.erase(this->it_positionInLiveList);     // Unlike vectors and queues, iterators and pointers to items in lists retain
-    //  their validity even after an element of the list has been removed
-    this->it_positionInLiveList = liveObjects.end();   // It's useless now
-    
-    deadObjects.push_back(this);
-  }
-}
-
 void NE::ManagedMemObj::CollectGarbage()
 {
   for( std::list<ManagedMemObj *>::iterator it = deadObjects.begin(); it != deadObjects.end(); it++)
   {
-    Log::Get().Write( Log::LOGTO_USER, "Garbaging pointer: %i", *it);
+    Log::Get().Write( Log::LOGTO_CONSOLE, "Garbaging pointer: %i", *it);
     delete (*it);
   }
   
@@ -77,10 +54,10 @@ void NE::ManagedMemObj::CollectRemainingObjects(bool bEmitWarnings)
     ManagedMemObj *o = (*it);
     if(bEmitWarnings)
     {
-      Log::Get().Write( Log::LOGTO_USER, "ERROR: pointer %i was leaked.", o);
+      Log::Get().Write( Log::LOGTO_CONSOLE, "ERROR: managed memory object of type %s was leaked and caught by CollectRemainingObjects.", typeid(*o).name() );
     }
     
     delete o;
   }
-  liveObjects.clear();
+  liveObjects.clear();    // Destroys all objects in liveObjects
 }

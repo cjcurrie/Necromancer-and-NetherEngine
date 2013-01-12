@@ -16,5 +16,18 @@
          landmarkName = "onAssert__(char const *file, unsigned line)"
          landmarkType = "7">
       </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "../NetherEngine/Errors and Debug/Log.h"
+         timestampString = "379666046.631049"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "63"
+         endingLineNumber = "63"
+         landmarkName = "class Log"
+         landmarkType = "3">
+      </FileBreakpoint>
    </FileBreakpoints>
 </Bucket>

@@ -1,3 +1,2 @@
-err0: Null reference
+err0: Nullreference
 err1: Unsafe context
-err2: <undefined>

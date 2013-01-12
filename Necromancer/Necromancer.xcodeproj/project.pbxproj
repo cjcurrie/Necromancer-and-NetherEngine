@@ -403,13 +403,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				309C666A1693D69400DDDCD3 /* main.mm in Sources */,
-				309C666B1693D69400DDDCD3 /* ShaderLoaderProgram.cpp in Sources */,
-				309C666C1693D69400DDDCD3 /* ShaderCompiler.cpp in Sources */,
-				30097CBE16972ADA00D4F5BE /* ProfileSample.cpp in Sources */,
-				30F3EF3B169CA03F001DEE86 /* Log.cpp in Sources */,
 				3074880A169ED0F20059D1ED /* SettingsManager.cpp in Sources */,
+				30F3EF3B169CA03F001DEE86 /* Log.cpp in Sources */,
 				3074880C169F6E800059D1ED /* ManagedMemObj.cpp in Sources */,
 				30748810169F80E60059D1ED /* ProfileLogHandler.cpp in Sources */,
+				30097CBE16972ADA00D4F5BE /* ProfileSample.cpp in Sources */,
+				309C666B1693D69400DDDCD3 /* ShaderLoaderProgram.cpp in Sources */,
+				309C666C1693D69400DDDCD3 /* ShaderCompiler.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,6 +1,7 @@
 #ifndef NEInc_StaticBufferWrapper_h
   #define NEInc_StaticBufferWrapper_h
 
+  #include "NEAssert.h"
   #include "ManagedMemObj.h"
 
   namespace NE

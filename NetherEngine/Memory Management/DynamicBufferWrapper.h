@@ -10,9 +10,7 @@
   {
     template<class T>
     class DynamicBufferWrapper : public ManagedMemObj
-    {
-      DEFINE_THIS_FILE;
-      
+    {      
       protected:
         unsigned long dataSize;
         T *buffer;

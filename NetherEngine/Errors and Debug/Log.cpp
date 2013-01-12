@@ -1,5 +1,5 @@
-#include "Log.h"
 #include "Global.h"
+#include "Log.h"
 
 #include <iostream>
 
@@ -9,8 +9,8 @@
 
 NE::Log::Log()
 {
-  //the constructor doesn't do anything, but we need
-  //it for our singleton to work correctly
+  // The constructor doesn't do anything, but we need
+  //  it for our singleton to work correctly
 }
 
 NE::Log &NE::Log::Get()
@@ -32,18 +32,19 @@ bool NE::Log::Init()
   return true;
 }
 
+
 // Writes an message based upon the message table, logStrings
-void NE::Log::Write(int target_enum, unsigned long msgID, ...)
+void NE::Log::Write(int target_enum, LogID msgID, ...)
 {
   // va_list is mapped to char* in the header
   va_list args;
   // va_start is a macro
   
-  std::cout << "writing to " << msgID << ", which is " << logStrings[msgID] << std::endl;
+  std::cout << "writing to " << msgID << ", which is " << logStrings_flyweight[msgID] << std::endl;
   
   va_start(args, msgID);
   char szBuf[1024];
-  vsprintf(szBuf,logStrings[msgID].c_str(),args);
+  vsprintf(szBuf, logStrings_flyweight[msgID].c_str(), args);
   Write(target_enum,szBuf);
 }
 
@@ -94,7 +95,6 @@ void NE::Log::Write(int target_enum, const char *msg, ...)   // Last parameter i
     
     #ifdef NE_DEBUG    // Note that NE_DEBUG, like NOASSERT, is defined in Global.h
       appLog.flush();   
-                      //  @TODO: close logs at end of runtime? Even outside of debug mode?
     #endif
   }
   
@@ -125,7 +125,7 @@ void NE::Log::Write(int target_enum, const char *msg, ...)   // Last parameter i
     #endif
   }
   
-  if(target_enum & LOGTO_USER)
+  if(target_enum & LOGTO_CONSOLE)
   {
     std::cout << std::endl;
     #ifdef LOG_PREPEND_DATEANDTIME
@@ -167,9 +167,9 @@ bool NE::Log::LoadStrings()
   {
     while( !inStream.eof() )
     {
-      char szBuf[MAX_LINE_LENGTH];
-      inStream.getline(szBuf, MAX_LINE_LENGTH);   // Has an implied line delimiter, '\n'
-      logStrings[index++] = szBuf;
+      char szBuf[MAX_LOG_LINE_LENGTH];
+      inStream.getline(szBuf, MAX_LOG_LINE_LENGTH);   // Has an implied line delimiter, '\n'
+      logStrings_flyweight[index++] = szBuf;
     }
   }
   catch (std::ifstream::failure e) {
@@ -180,4 +180,12 @@ bool NE::Log::LoadStrings()
   }
   
   return true;
+}
+
+
+void NE::Log::CloseAllLogs()
+{
+  appLog.close();
+  clientLog.close();
+  serverLog.close();
 }
